@@ -7,15 +7,17 @@
 \usepackage{graphicx}
 \usepackage{mathrsfs}
 \usepackage{hyperref}
-\usepackage{xcolor}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{framed}
 \author{Francesco Corda}
 \title{Data Intelligence Applications}
 \setlength{\parindent}{0pt}
-
+\definecolor{shadecolor}{gray}{0.95}
 \begin{document}
 \maketitle
 \tableofcontents
 \newpage
+\setcounter{section}{1}
 \section{DIA 2}\label{dia-2}
 
 \subsection{Matching problems and alternating-path algorithms}\label{matching-problems-and-alternating-path-algorithms}
@@ -63,8 +65,8 @@ Alternating-path algorithms iteratively:
 \subsubsection{Looking for augmenting paths}\label{looking-for-augmenting-paths}
 
 We are given a matching (potentially an empty matching) and we look for all the shortest augmenting paths.
-
-Do:\\
+\begin{shaded}
+Do:
 \begin{enumerate}
 \item Consider every unmatched vertex
 \item Make a breadth-first search starting from every unmatched vertex
@@ -75,7 +77,7 @@ Do:\\
 \textbf{Case 2}: if, expanding an even node, the even node is directly connected to a vertex previously labeled as odd, then stop the search.\\
 \textbf{Case 3}: if, expanding an even node, the even node is directly connected to a vertex previously labeled as even belonging to same subtree, then shrink the blossom and connect the expansion of all the node of the blossom to the vertex of the blossom.
 \end{enumerate}
-
+\end{shaded}
 Case 3 in not possible in bipartite graphs, so Cases 1 and 2 are sufficient. Case 3 can happen in arbitrary graphs.
 
 If an augmenting path is found, the blossom will be expanded.
@@ -120,7 +122,7 @@ It can be implemented using two approaches:
 \end{itemize}
 \end{itemize}
 
-\textbf{Key ideas:}
+\textbf{Key ideas}
 
 \begin{itemize}
 \item The algorithm returns the minimal cost matching
@@ -129,10 +131,10 @@ It can be implemented using two approaches:
 \item If the original graph is not balanced, we can add dummy variables with the maximum cost (zero if we are maximizing) as value
 \end{itemize}
 
-\textbf{Steps:}
+\textbf{Steps}
 
 Given an adjacency matrix of dimension $(N \times N)$, with $N$ = number of nodes:
-
+\begin{shaded}
 \begin{enumerate}
 \item Subtract the smallest entry in each row from all the other entries in the row.
 \item Subtract the smallest entry in each column from all the other entries in the column.
@@ -140,12 +142,13 @@ Given an adjacency matrix of dimension $(N \times N)$, with $N$ = number of node
 \item If there are N lines drawn, an optimal assignment of zeros is possible and the algorithm is finished. Otherwise, go to the next step
 \item Find the smallest entry not covered by any line. Subtract this entry from each row that is not crossed out, and then add it to each column that is crossed out. Then, go back to Step 3.
 \end{enumerate}
+\end{shaded}
 
 \subsection{Combinatorial bandits and matching problems}\label{combinatorial-bandits-and-matching-problems}
 
 A classical bandit problem associates unknown expected rewards to a set of candidates. A combinatorial bandit problem adds combinatorial constraints to the formulation.
 
-\textbf{Problem formulation:}
+\textbf{Problem formulation}
 
 \begin{itemize}
 \item an \textbf{arm} is a candidate
@@ -205,12 +208,13 @@ $$\begin{aligned} t &: \textsf{time} \\ A&: \textsf{set of arms} \\ a&: \textsf{
 \end{itemize}
 
 \textbf{Pseudocode}
-
+\begin{shaded}
 \begin{enumerate}
 \item Play once every arm $a \in A$
 \item At every time $t$ play arm $a_t$ such that
 $$a_t \leftarrow \text{arg} \max_{a \in A}{\left\{ \bar{x}_a + \sqrt{\frac{2 \log(t)}{n_a (t-1)}} \right\}}$$
 \end{enumerate}
+\end{shaded}
 
 The term$\sqrt{\frac{2 \log(t)}{n_a (t-1)}}$ creates the upper confidence bound. It reduces linearly as we observe new samples of the arm, and increases logarithmically as the time increases.
 \newline
@@ -276,7 +280,7 @@ $$(\alpha_{a_t}, \beta_{a_t}) \leftarrow (\alpha_{a_t}, \beta_{a_t}) + (x_{a_t, 
 \newline
 
 \textbf{Pseudocode}
-
+\begin{shaded}
 \begin{enumerate}
 \item At every time $t$, for every arm $a$
 $$\tilde{\theta}_a \leftarrow \mathsf{Sample}(\mathbb{P}(\mu_a = \theta_a))$$
@@ -285,6 +289,7 @@ $$a_t \leftarrow \text{arg} \max_{a \in A} \left\{ \tilde{\theta}_a \right\}$$
 \item Update the Beta distribution of arm $a_t$ as
 $$(\alpha_{a_t}, \beta_{a_t}) \leftarrow (\alpha_{a_t}, \beta_{a_t}) + (x_{a_t, t}, 1 - x_{a_t, t})$$
 \end{enumerate}
+\end{shaded}
 
 \textbf{Regret}
 
@@ -313,8 +318,8 @@ Assumptions: for simplicity, the random variable of every arm is a Bernoulli in 
 The functioning is the same as the basic Thompson Sampling, except that in order to find a superarm with maximum expected reward, we need to solve a combinatorial problem.
 \newline
 
-\textbf{Pseudocode:}
-
+\textbf{Pseudocode}
+\begin{shaded}
 \begin{enumerate}
 \item At every time $t$, for every arm $a$
 $$\tilde{\theta}_a \leftarrow \mathsf{Sample}(\mathbb{P}(\mu_a = \theta_a))$$
@@ -325,6 +330,7 @@ In this step, we solve the associated combinatorial problem, finding a subset of
 \item Update the Beta distribution of arm $a_t$ as
 $$(\alpha_{a_t}, \beta_{a_t}) \leftarrow (\alpha_{a_t}, \beta_{a_t}) + (x_{a_t, t}, 1 - x_{a_t, t})$$
 \end{enumerate}
+\end{shaded}
 
 Thompson Sampling regret:
 
@@ -379,8 +385,9 @@ $$\begin{aligned}\alpha_{\mathscr{A}} &: \textsf{competitive factor of the algor
 \Gamma_{\mathscr{A}}(P) &: \textsf{value provided by the algorithm}\\ \Gamma^*(P) &: \textsf{value provided by the clairvoyant algorithm}\end{aligned}$$
 
 It's the minimization over all the problems of the ratio between the value provided by the online algorithm and the value provided by the clairvoyant algorithm. The competitive factor can't be larger than 1.
+\newline
 
-\textbf{Competitive factor and online matching}:
+\textbf{Competitive factor and online matching}
 
 \begin{itemize}
 
@@ -388,9 +395,7 @@ It's the minimization over all the problems of the ratio between the value provi
 \item No randomized algorithms can have an expected competitive factor larger than $\frac{e-1}{e}$ in online bipartite matching problem
 \end{itemize}
 
-\textbf{Deterministic algorithm (greedy):} match a node with an arbitrary unmatched node. Every time a node enters the problem, we match it with an arbitrary unmatched node connected to it.
-
-This algorithm has a competitive ratio of $\frac{1}{2}$.
+\textbf{Deterministic algorithm (greedy):} match a node with an arbitrary unmatched node. Every time a node enters the problem, we match it with an arbitrary unmatched node connected to it. This algorithm has a competitive ratio of $\frac{1}{2}$.
 \newline
 
 \textit{Proof}:
@@ -431,6 +436,7 @@ Problem:
 \end{itemize}
 
 \textbf{Negative result}: there is no deterministic competitive algorithm even when $k$ is the same for all the nodes.
+\newline
 
 \textit{Proof, by counterexample}:
 
@@ -470,6 +476,7 @@ When a node is at its deadline:
 \end{itemize}
 
 When we remove a node from the graph, we need to remove both buyer and seller nodes, because they are a representation of the same node in the problem.
+\newline
 
 \textbf{Worst-case example showed before}
 
@@ -477,6 +484,7 @@ The algorithm returns a matching with a value $>>1$ with a probability of $\frac
 
 The competitive factor in the worst case example seen before is about $\frac{1}{2}$, both in the case in which node $C$ enters the problem and in the case in which it doesn't.
 
+\setcounter{section}{3}
 \section{DIA 4}\label{dia-4}
 
 \subsection{Information cascades}\label{information-cascades}
@@ -542,9 +550,11 @@ Technically speaking: the first two users, selecting $1$, generated an \textbf{i
 
 On the horizontal axis, we have users/time. On the vertical axis we have the number of times the users selected $1$ minus the number of times the users selected $0$.
 
+\begin{shaded}
 Until the difference $\#1 - \#0 \le 1$, the actions chosen by the users \textit{depend on the prior}.
 
 Otherwise we have a cascade, meaning that the actions chosen by the users \textit{do not depend on the prior}.
+\end{shaded}
 
 \subsubsection{Cascade activation probability}\label{cascade-activation-probability}
 
@@ -556,7 +566,7 @@ $$\bar{p} = q^3 + (1 - q)^3$$
 This is a stronger than necessary condition, because it would be sufficient to have the first two users with the same signal to generate a cascade.
 
 The probability of a cascade tends to 1:
-$1-(1-\bar{p})^{\frac{T}{3}} \xrightarrow[T\rightarrow \infty]{} 1$
+$$1-(1-\bar{p})^{\frac{T}{3}} \xrightarrow[T\rightarrow \infty]{} 1$$
 
 Again, this probability is smaller than the actual probability of a cascade, but it still tends to $1$.
 
@@ -708,6 +718,7 @@ Here the result. We can activate the edges living nodes $b$ and $e$ and now node
 \subsection{Influence maximization}\label{influence-maximization}
 
 We define the problem of \textbf{influence maximization} and discuss its solution. We consider only the independent cascade model. A similar approach can be followed for the linear threshold case.
+\newline
 
 \textbf{Inputs:}
 \begin{itemize}
@@ -734,7 +745,7 @@ This task is not straightforward in general, in this case the task is easy and i
 $0.5$. In general with arbitrary graph the task is a bit involved.
 
 \subsubsection{General case}\label{general-case}
-
+\begin{shaded}
 \begin{enumerate}
 \item Call $E$ the set of $m$ edges $\{e_1, e_2, \ldots, e_m \}$. Call $x = (x_1, x_2, \ldots, x_m)$ a binary vector such that $x_i = 1$ if edge $e_i$ is present and $0$ otherwise.
 \item Notice that every $x$ corresponds to a live-edge graph because we are drawing a sample for every edge and we are generating the corresponding live-edge graph.
@@ -742,6 +753,7 @@ $0.5$. In general with arbitrary graph the task is a bit involved.
 \item For every $x$ check whether there is a path connecting a node with some seed.
 \item For every $x$ compute the corresponding probability, that is the probability that this live-edge graph occurs. The probability of the live-edge graph is given by the product of all the probabilities, that is $p$ in the case of the edges that have been activated and $1-p$ in the case of the edges that didn't activate.
 \end{enumerate}
+\end{shaded}
 
 The activation probability of a node is the sum of the probabilities of the live-edge graphs with a path connecting the node with some seed.
 
@@ -758,7 +770,7 @@ To summarize we need to enumerate all the possible live-edge graphs and have the
 We approximate the calculation of the activation probabilities by means of Monte Carlo sampling technique.
 
 \subsubsection{Monte Carlo sampling}\label{monte-carlo-sampling}
-
+\begin{shaded}
 \begin{enumerate}
 \item For every node $i$ assign $z_i = 0$, these variables count the number of Monte Carlo simulations in which a node has been activate
 \item Randomly generate a live-edge graph according to the probability of every edge
@@ -766,6 +778,7 @@ We approximate the calculation of the activation probabilities by means of Monte
 \item Go to Step 1 unless $k$ repetitions have been done
 \item For every node return $\frac{z_i}{k}$, that is the frequency with which the node has been activated in our simulation Monte Carlo simulation
 \end{enumerate}
+\end{shaded}
 
 Checking whether a node has been activated in the simulation can be done by using a breadth-first search excluding nodes previously visited. Since there will be multiple seeds we need that our search has multiple rootes and we are basically doing a breadth-first search, starting from multiple rootes and then going down the tree.
 
@@ -930,6 +943,8 @@ When the arms space is huge, we can exploit the information gained on observed a
 \item \textbf{Input:} set of arms $A$, parameter $c>0$
 \item \textbf{Initialization:} $B_0 = 0 \in R^D, M_0 = I \in R^{d \times d}$
 \end{itemize}
+
+\begin{shaded}
 for $t=1, 2, \ldots, n$ do
 \begin{enumerate}
 \item $\theta_{t-1} = M_{t-1}^{-1} B_{t-1}a$\\
@@ -941,6 +956,8 @@ $\mathsf{UCBs} = x^T \theta_{t-1} + c \sqrt{x^T M_{t-1}^{-1} x}$
 \item $M_t = M_t + x_t x_t^T$ and $B_t = B_t + x_t r_t$
 \end{enumerate}
 \end{enumerate}
+\end{shaded}
+
 
 \subsubsection{IMLinUCB}\label{imlinucb}
 
